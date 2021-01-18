@@ -1,0 +1,73 @@
+---
+title: "Abundance of mountain yellow-legged frog across the Sierra Lakes"
+author: "Quin Smith"
+date: "1/18/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#read in packages
+library(tidyverse)
+library(here)
+library(readxl)
+library(janitor)
+library(patchwork)
+library(lubridate)
+```
+
+### Introduction
+
+```{r, echo = FALSE, message = FALSE,warning = FALSE}
+#read in/wrangle data to only include mountain yellow-legged frogs (RAMU) across all water bodies by life stage and year, excluding 'EggMass'
+
+frogs <- read_excel(here("data", "sierra_amphibians.xlsx"))
+
+ramu_frogs <- frogs %>% 
+  mutate(survey_date = ymd(survey_date)) %>% 
+  mutate(year = year(survey_date)) %>% 
+  filter(amphibian_species == "RAMU" & amphibian_life_stage != "EggMass") %>% 
+  group_by(amphibian_life_stage, year) %>% 
+  summarize(n = n())
+
+#graph
+fig_palette <- c("#009E73", "#0072B2", "#D55E00")
+fig_palette2 <- c("#CC6666", "#9999CC", "#66CC99")
+ 
+ramu_frogs %>% 
+  ggplot(aes(x = year, y = n)) +
+  geom_line(aes(color = amphibian_life_stage), size = 1) +
+  geom_point(aes(color = amphibian_life_stage), size = 1.5) +
+  scale_color_manual(values = fig_palette2) +
+  labs(x = "Year", y = "Individuals observed", color = "Life Stage" ) +
+  theme_bw()
+```
+
+```{r, echo = FALSE, message = FALSE,warning = FALSE}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
