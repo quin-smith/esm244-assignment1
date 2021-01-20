@@ -14,13 +14,14 @@ library(readxl)
 library(janitor)
 library(patchwork)
 library(lubridate)
+library(ggrepel)
 ```
 
 ### Introduction
+This visual analysis with associated R-markdown file explores abundance data of mountain yellow-legged frogs (Rana muscosa) recorded by R.A. Knapp et al. and the Sierra Lakes Inventory Project.  The data was collected between 1995 and 2002 across a study area containing "over 8,000 lentic water bodies in the southern Sierra Nevada, including lakes, ponds, marshes, and meadows" (Environmental Data Initiative Repository).
 
 ```{r, echo = FALSE, message = FALSE,warning = FALSE}
 #read in/wrangle data to only include mountain yellow-legged frogs (RAMU) across all water bodies by life stage and year, excluding 'EggMass'
-
 frogs <- read_excel(here("data", "sierra_amphibians.xlsx"))
 
 ramu_frogs <- frogs %>% 
@@ -30,26 +31,61 @@ ramu_frogs <- frogs %>%
   group_by(amphibian_life_stage, year) %>% 
   summarize(n = n())
 
-#graph
+#ggrepel label
+gg_labeller <- ramu_frogs %>% 
+  mutate(gg_lab = case_when(
+    year == 2002 & amphibian_life_stage == "Adult" ~ "Adult",
+    year == 2002 & amphibian_life_stage == "SubAdult" ~ "Sub-Adult",
+    year == 2002 & amphibian_life_stage == "Tadpole" ~ "Tadpole"
+  ))
+
+#graph of number of individuals observed given conditions above
 fig_palette <- c("#009E73", "#0072B2", "#D55E00")
 fig_palette2 <- c("#CC6666", "#9999CC", "#66CC99")
  
-ramu_frogs %>% 
+ramu_graph <- ramu_frogs %>% 
   ggplot(aes(x = year, y = n)) +
   geom_line(aes(color = amphibian_life_stage), size = 1) +
   geom_point(aes(color = amphibian_life_stage), size = 1.5) +
   scale_color_manual(values = fig_palette2) +
   labs(x = "Year", y = "Individuals observed", color = "Life Stage" ) +
-  theme_bw()
+  geom_label_repel(data = gg_labeller, aes(label = gg_lab),
+                   nudge_x = -2,
+                   na.rm = TRUE) +
+  theme_bw() +
+  theme(legend.position = "none")
 ```
 
 ```{r, echo = FALSE, message = FALSE,warning = FALSE}
+#wrangle data to create a subset of total counts of observed adult and subadult RAMU by lake, 5 top lakes (in observations)
+ramu_lake <- frogs %>% 
+  mutate(lake_id = paste("Lake", frogs$lake_id, sep = " ")) %>% 
+  filter(amphibian_species == "RAMU" & 
+           amphibian_life_stage %in% c("SubAdult", "Adult")) %>% 
+  group_by(lake_id) %>% 
+  summarize(n = n()) %>% 
+  mutate(lake_id = fct_reorder(lake_id, n)) %>% 
+  slice_max(order_by = n, n = 5)
 
+#column graph with 5 top lakes
+lake_graph <- ggplot(data = ramu_lake, aes(x = lake_id, y = n)) +
+  geom_col(fill = "#CC6666") +
+  labs(x = "Lake (ID for confidentiality)", y = "Individuals observed") +
+  theme_bw()
 ```
 
+```{r, echo = FALSE, message = FALSE,warning = FALSE, fig.width = 9, fig.height = 6, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (low to high).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
+#combine graphs
+comp_graph <- ramu_graph + lake_graph +
+  plot_annotation(tag_levels = 'a',
+                  tag_suffix = ")")
 
+comp_graph
+```
 
+### Data Citation:
 
+Knapp, R.A., C. Pavelka, E.E. Hegeman, and T.C. Smith. 2020. The Sierra Lakes Inventory Project: Non-Native fish and community composition of lakes and ponds in the Sierra Nevada, California ver 2. Environmental Data Initiative. https://doi.org/10.6073/pasta/d835832d7fd00d9e4466e44eea87fab3
 
 
 
