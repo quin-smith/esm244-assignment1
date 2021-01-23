@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = TRUE)
 #Load packages
 library(tidyverse)
 library(ggfortify)
-library(palmerpenguins)
+library(janitor)
+library(ggrepel)
 ```
 
 ```{r, include = FALSE}
@@ -18,53 +19,34 @@ library(palmerpenguins)
 states_df <- data.frame(state.x77) %>% 
   rownames_to_column(var = "State")
 
-#convert the state.region vector (included in base R) from factor to character vector
-Region <- as.character(state.region)
+#convert the state.region (included in base R) from factor to character vector
+region <- as.character(state.region)
 
-#append the Region vector to the state dataframe
-states_df <- cbind(states_df, Region)
+#load state.abb (included in base R)
+abbr <- state.abb
+
+#append the region and state.abb (included in base r) vector to the state dataframe, clean names
+states_df <- cbind(states_df, region, abbr) %>% 
+  clean_names() %>% 
+  column_to_rownames(var = 'abbr')
 ```
 
-```{r}
+```{r, echo = FALSE, warning = FALSE, message = FALSE}
 #create the PCA plot
 states_pca <- states_df %>% 
-  select()
+  select(population, income, illiteracy, life_exp, murder, hs_grad, frost, area) %>% 
   scale() %>% 
   prcomp()
 
-states_pca$rotation
-
 autoplot(states_pca,
-         data = state.x77,
+         data = states_df,
+         shape = FALSE,
+         label.size = 2.75,
+         colour = 'region',
          loadings = TRUE,
-         loadings.label = TRUE) +
+         loadings.label = TRUE,
+         loadings.label.repel = TRUE) +
   theme_bw()
 
 ```
-
-penguin_pca <- penguins %>% 
-  select(body_mass_g, ends_with("_mm")) %>% 
-  drop_na()  %>% 
-  scale() %>% 
-  prcomp()
-  
-penguin_pca$rotation
-
-penguin_complete <- penguins %>% 
-  drop_na(body_mass_g, ends_with("_mm"))
-
-autoplot(penguin_pca,
-         data = penguin_complete,
-         colour = 'species',
-         loadings = TRUE,
-         loadings.label = TRUE) +
-  theme_minimal()
-
-
-
-
-
-
-
-
 
