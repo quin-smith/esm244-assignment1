@@ -1,0 +1,70 @@
+---
+title: "Task 2"
+author: "Quin Smith"
+date: "1/22/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+#Load packages
+library(tidyverse)
+library(ggfortify)
+library(palmerpenguins)
+```
+
+```{r, include = FALSE}
+#create a dataframe from dataset, state.x77 (included in base R)
+states_df <- data.frame(state.x77) %>% 
+  rownames_to_column(var = "State")
+
+#convert the state.region vector (included in base R) from factor to character vector
+Region <- as.character(state.region)
+
+#append the Region vector to the state dataframe
+states_df <- cbind(states_df, Region)
+```
+
+```{r}
+#create the PCA plot
+states_pca <- states_df %>% 
+  select()
+  scale() %>% 
+  prcomp()
+
+states_pca$rotation
+
+autoplot(states_pca,
+         data = state.x77,
+         loadings = TRUE,
+         loadings.label = TRUE) +
+  theme_bw()
+
+```
+
+penguin_pca <- penguins %>% 
+  select(body_mass_g, ends_with("_mm")) %>% 
+  drop_na()  %>% 
+  scale() %>% 
+  prcomp()
+  
+penguin_pca$rotation
+
+penguin_complete <- penguins %>% 
+  drop_na(body_mass_g, ends_with("_mm"))
+
+autoplot(penguin_pca,
+         data = penguin_complete,
+         colour = 'species',
+         loadings = TRUE,
+         loadings.label = TRUE) +
+  theme_minimal()
+
+
+
+
+
+
+
+
+
