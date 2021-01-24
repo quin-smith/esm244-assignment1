@@ -34,7 +34,7 @@ states_df <- cbind(states_df, region, abbr) %>%
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 #create the PCA plot
 states_pca <- states_df %>% 
-  select(population, income, illiteracy, life_exp, murder, hs_grad, frost, area) %>% 
+  select(illiteracy, life_exp, murder, hs_grad) %>% 
   scale() %>% 
   prcomp()
 
