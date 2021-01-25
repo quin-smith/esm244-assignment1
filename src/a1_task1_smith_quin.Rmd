@@ -46,6 +46,7 @@ fig_palette2 <- c("#CC6666", "#9999CC", "#66CC99")
 ```
 
 ```{r, message = FALSE, warning = FALSE} 
+#Create line graph: number observations of RAMU per year over all water bodies by life-stage
 ramu_graph <- ramu_frogs %>% 
   ggplot(aes(x = year, y = n)) +
   geom_path(aes(color = amphibian_life_stage), size = 1.25) +
@@ -82,8 +83,8 @@ lake_graph <- ggplot(data = ramu_lake, aes(x = reorder(lake_id, -n), y = n)) +
   removeGridX()
 ```
 
-```{r, message = FALSE,warning = FALSE, fig.width = 10, fig.height = 6.5, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  Gaps exist where no observations were recorded, 1997-1999.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (low to high).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
-#combine graphs
+```{r, message = FALSE,warning = FALSE, fig.width = 10, fig.height = 6.5, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  Gaps exist where no observations were recorded, 1997-1999.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (highest to lowest).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
+#combine graphs with patchwork
 comp_graph <- ramu_graph + lake_graph +
   plot_annotation(tag_levels = 'a',
                   tag_suffix = ")")
