@@ -35,7 +35,7 @@ states_df <- cbind(states_df, region, abbr) %>%
   column_to_rownames(var = 'abbr')
 ```
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE}
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5}
 #create the PCA plot
 states_pca <- states_df %>% 
   select(income, illiteracy, life_exp, murder, hs_grad) %>% 
@@ -51,6 +51,5 @@ autoplot(states_pca,
          loadings.label = TRUE,
          loadings.label.repel = TRUE) +
   theme_bw()
-
 ```
 
