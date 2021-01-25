@@ -17,7 +17,13 @@ library(RColorBrewer)
 
 ### Introduction
 
-The `state` dataset is included within the `datasets` package that is pre-installed with R.  Data was 
+The following principal components analysis uses the `state` dataset, which is included within the `datasets` package that comes pre-installed with R.  It contains data of facts and figures relating to the 50 states.  This analysis includes data from `state.x77` and `state.abb` dataframes including the following variables:
+
+- `income`: per capita income (1974)
+- `illiteracy`: illiteracy (1970, percent of the population)
+- `life_exp`: life expectancy in years
+- `murder`: murder and non-negligent manslaughter rate per 100,000 population (1976)
+- `hs_grad`: percent high-school graduates (1970)
 
 ```{r, message = FALSE, warning = FALSE}
 #create a dataframe from dataset, state.x77 (included in base R)
