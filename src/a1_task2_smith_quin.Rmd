@@ -17,7 +17,7 @@ library(RColorBrewer)
 
 ### Introduction
 
-The following principal components analysis uses the `state` dataset, which is included within the `datasets` package that comes pre-installed with R.  It contains data of facts and figures relating to the 50 states.  This analysis includes data from `state.x77` and `state.abb` dataframes including the following variables:
+The following principal components analysis uses the `state` dataset included within the `datasets` package, pre-installed with R.  It contains data of facts and figures relating to the 50 states.  For this analysis, data from `state.x77` and `state.abb` segments of the dataset were merged.  A PCA biplot was created which includes the following variables:
 
 - `income`: per capita income (1974)
 - `illiteracy`: illiteracy (1970, percent of the population)
@@ -26,11 +26,11 @@ The following principal components analysis uses the `state` dataset, which is i
 - `hs_grad`: percent high-school graduates (1970)
 
 ```{r, message = FALSE, warning = FALSE}
-#create a dataframe from dataset, state.x77 (included in base R)
+#create a dataframe from dataset, state.x77 (included in base R), change row names to a column 
 states_df <- data.frame(state.x77) %>% 
   rownames_to_column(var = "State")
 
-#test population density
+#test population density (doesn't change the PCA plot)
 states_df <- states_df %>% 
   mutate(density = Population / Area)
 
@@ -40,13 +40,13 @@ region <- as.character(state.region)
 #load state.abb (included in base R)
 abbr <- state.abb
 
-#append the region and state.abb (included in base r) vector to the state dataframe, clean names
+#append the region and state.abb (included in base r) vector to the state dataframe, clean names, change the row names from the abbreviations
 states_df <- cbind(states_df, region, abbr) %>% 
   clean_names() %>% 
   column_to_rownames(var = 'abbr')
 ```
 
-```{r, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5}
+```{r, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5, fig.cap = "**Figure 1:** Principal components analysis of income, illiteracy, life expectancy (life_exp), murder, and high-school graduation percentage (hs_grad) across the 50 states of the US.  Different colors represent  PC1 accounts for 64.03% of the variance in the data, while PC2 accounts for 18.76%.  Together the two principal components account for 82.79% of the variance."}
 #create palette
 state_palette <- c("#7A871E", "#104210", "#E55B13", "#F6A21E")
 
