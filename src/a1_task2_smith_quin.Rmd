@@ -12,6 +12,7 @@ library(tidyverse)
 library(ggfortify)
 library(janitor)
 library(ggrepel)
+library(RColorBrewer)
 ```
 
 ### Introduction
@@ -40,20 +41,25 @@ states_df <- cbind(states_df, region, abbr) %>%
 ```
 
 ```{r, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5}
+#create palette
+state_palette <- c("#7A871E", "#104210", "#E55B13", "#F6A21E")
+
 #create the PCA plot
 states_pca <- states_df %>% 
   select(income, illiteracy, life_exp, murder, hs_grad) %>% 
   scale() %>% 
   prcomp()
 
+
 autoplot(states_pca,
          data = states_df,
-         label.size = 2.75,
+         label.size = 3,
          colour = 'region',
          loadings = TRUE,
          loadings.label = TRUE,
          loadings.label.repel = TRUE,
          label.repel = TRUE) +
+  scale_color_brewer(palette = "Set1") +
   theme_bw()
 ```
 
