@@ -1,5 +1,5 @@
 ---
-title: "Task 2"
+title: "Principal Components Analysis of five variables in the `state` dataset"
 author: "Quin Smith"
 date: "1/22/2021"
 output: html_document
@@ -14,7 +14,11 @@ library(janitor)
 library(ggrepel)
 ```
 
-```{r, include = FALSE}
+### Introduction
+
+The `state` dataset is included within the `datasets` package that is pre-installed with R.  Data was 
+
+```{r, message = FALSE, warning = FALSE}
 #create a dataframe from dataset, state.x77 (included in base R)
 states_df <- data.frame(state.x77) %>% 
   rownames_to_column(var = "State")
@@ -35,7 +39,7 @@ states_df <- cbind(states_df, region, abbr) %>%
   column_to_rownames(var = 'abbr')
 ```
 
-```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5}
+```{r, warning = FALSE, message = FALSE, fig.width = 9.5, fig.height=7.5}
 #create the PCA plot
 states_pca <- states_df %>% 
   select(income, illiteracy, life_exp, murder, hs_grad) %>% 
@@ -44,12 +48,12 @@ states_pca <- states_df %>%
 
 autoplot(states_pca,
          data = states_df,
-         shape = FALSE,
          label.size = 2.75,
          colour = 'region',
          loadings = TRUE,
          loadings.label = TRUE,
-         loadings.label.repel = TRUE) +
+         loadings.label.repel = TRUE,
+         label.repel = TRUE) +
   theme_bw()
 ```
 
