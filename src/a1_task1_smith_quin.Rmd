@@ -18,8 +18,14 @@ library(ggrepel)
 library(ggExtra)
 ```
 
-### Introduction
+### Introduction:
+
 This visual analysis with associated R-markdown file explores abundance data of mountain yellow-legged frogs (Rana muscosa) recorded by R.A. Knapp et al. and the Sierra Lakes Inventory Project.  The data was collected between 1995 and 2002 across a study area containing "over 8,000 lentic water bodies in the southern Sierra Nevada, including lakes, ponds, marshes, and meadows" (Environmental Data Initiative Repository).
+
+
+### Section 1: 
+
+A line graph of total mountain yellow-legged frog (Rana muscosa) count each year across all water bodies, by life stage excluding the ‘EggMass’ level.
 
 ```{r, message = FALSE,warning = FALSE}
 #read in/wrangle data to only include mountain yellow-legged frogs (RAMU) across all water bodies by life stage and year, excluding 'EggMass'
@@ -43,9 +49,7 @@ gg_labeller <- ramu_frogs %>%
 #graph of number of individuals observed given conditions above
 fig_palette <- c("#009E73", "#0072B2", "#D55E00")
 fig_palette2 <- c("#CC6666", "#9999CC", "#66CC99")
-```
 
-```{r, message = FALSE, warning = FALSE} 
 #Create line graph: number observations of RAMU per year over all water bodies by life-stage
 ramu_graph <- ramu_frogs %>% 
   ggplot(aes(x = year, y = n)) +
@@ -61,7 +65,14 @@ ramu_graph <- ramu_frogs %>%
   theme(legend.position = "none") +
   scale_y_continuous(breaks = seq(0, 185000, 25000)) +
   scale_x_continuous(breaks = seq(1995, 2002, 1))
+
+ramu_graph
 ```  
+
+
+### Section 2: 
+
+A column graph containing total counts (over all years of the study) of combined adult and subadult endangered mountain yellow-legged frogs (Rana muscosa) observed in the 5 lakes with the greatest total observed counts.
 
 ```{r, message = FALSE,warning = FALSE}
 #wrangle data to create a subset of total counts of observed adult and subadult RAMU by lake, 5 top lakes (in observations)
@@ -81,7 +92,14 @@ lake_graph <- ggplot(data = ramu_lake, aes(x = reorder(lake_id, -n), y = n)) +
   scale_y_continuous(breaks = seq(0, 2500, 250), expand = expansion(mult = c(0, .1))) +
   theme_bw() +
   removeGridX()
+
+lake_graph
 ```
+
+
+### Section 3:
+
+A compound figure containing the graphs from sections 1 and 2.
 
 ```{r, message = FALSE,warning = FALSE, fig.width = 10, fig.height = 6.5, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  Gaps exist where no observations were recorded, 1997-1999.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (highest to lowest).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
 #combine graphs with patchwork
