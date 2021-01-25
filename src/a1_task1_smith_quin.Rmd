@@ -74,7 +74,7 @@ ramu_lake <- frogs %>%
   slice_max(order_by = n, n = 5)
 
 #column graph with 5 top lakes
-lake_graph <- ggplot(data = ramu_lake, aes(x = lake_id, y = n)) +
+lake_graph <- ggplot(data = ramu_lake, aes(x = reorder(lake_id, -n), y = n)) +
   geom_col(fill = "#CC6666") +
   labs(x = "\nLake (ID for confidentiality)", y = "Individuals observed\n") +
   scale_y_continuous(breaks = seq(0, 2500, 250), expand = expansion(mult = c(0, .1))) +
@@ -82,7 +82,7 @@ lake_graph <- ggplot(data = ramu_lake, aes(x = lake_id, y = n)) +
   removeGridX()
 ```
 
-```{r, message = FALSE,warning = FALSE, fig.width = 9, fig.height = 6, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  Gaps exist where no observations were recorded, 1997-1999.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (low to high).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
+```{r, message = FALSE,warning = FALSE, fig.width = 10, fig.height = 6.5, fig.cap = "**Figure 1:** a)  Total mountain yellow-legged frog (Rana muscosa) observations each year across all water bodies in the study area, 1995-2002.  Gaps exist where no observations were recorded, 1997-1999.  b)  The 5 lakes with the greatest number of mountain yellow-legged frog observations (low to high).  Excludes tadpole observations.  Data: Sierra Lakes Inventory Project." }
 #combine graphs
 comp_graph <- ramu_graph + lake_graph +
   plot_annotation(tag_levels = 'a',
