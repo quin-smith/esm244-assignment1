@@ -19,6 +19,10 @@ library(ggrepel)
 states_df <- data.frame(state.x77) %>% 
   rownames_to_column(var = "State")
 
+#test population density
+states_df <- states_df %>% 
+  mutate(density = Population / Area)
+
 #convert the state.region (included in base R) from factor to character vector
 region <- as.character(state.region)
 
@@ -34,7 +38,7 @@ states_df <- cbind(states_df, region, abbr) %>%
 ```{r, echo = FALSE, warning = FALSE, message = FALSE}
 #create the PCA plot
 states_pca <- states_df %>% 
-  select(illiteracy, life_exp, murder, hs_grad) %>% 
+  select(income, illiteracy, life_exp, murder, hs_grad) %>% 
   scale() %>% 
   prcomp()
 
